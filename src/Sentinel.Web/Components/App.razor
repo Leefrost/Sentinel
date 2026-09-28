@@ -1,0 +1,28 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <base href="/"/>
+    <title>The Sentinel</title>
+
+    <ResourcePreloader/>
+    <link rel="stylesheet" href="@Assets["_content/BlazorBlueprint.Components/blazorblueprint.css"]"/>
+    <link rel="stylesheet" href="@Assets["theme.css"]"/>
+    <link rel="stylesheet" href="@Assets["app.css"]"/>
+    <link rel="stylesheet" href="@Assets["Sentinel.Web.styles.css"]"/>
+    <link rel="stylesheet" href="@Assets["_content/BlazorBlueprint.Components/css/themes.css"]"/>
+
+    <ImportMap/>
+    <link rel="icon" type="image/png" href="favicon.png"/>
+    <HeadOutlet/>
+    <script src="@Assets["_content/BlazorBlueprint.Components/js/theme-init.js"]"></script>
+</head>
+
+<body>
+<Routes @rendermode="InteractiveServer"/>
+<ReconnectModal/>
+<script src="@Assets["_framework/blazor.web.js"]"></script>
+</body>
+</html>

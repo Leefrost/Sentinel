@@ -1,0 +1,6 @@
+<Solution>
+  <Folder Name="/package/">
+    <Project Path="src/Sentinel.HealthCheck/Sentinel.HealthCheck.csproj" />
+  </Folder>
+  <Project Path="src/Sentinel.Web/Sentinel.Web.csproj" />
+</Solution>
