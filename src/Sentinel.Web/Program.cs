@@ -1,5 +1,5 @@
 using BlazorBlueprint.Components;
-using Sentinel.Web.Components;
+using Sentinel.Web;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.WebHost
