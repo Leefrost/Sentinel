@@ -8,6 +8,13 @@
     <title>The Sentinel</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+        }
+    </script>
+
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -37,7 +44,6 @@
             font-family: 'JetBrains Mono', monospace;
         }
 
-        /* Custom scrollbar styling for seamless feel */
         ::-webkit-scrollbar {
             width: 6px;
             height: 6px;
@@ -58,9 +64,129 @@
     </style>
 </head>
 
-<body>
+<body
+    class="h-full text-slate-800 dark:text-slate-100 bg-[#eef0f8] dark:bg-[#0f172a] flex flex-col items-center justify-start p-2 sm:p-4 md:p-8 antialiased selection:bg-purple-500 selection:text-white transition-colors duration-300">
 <Routes @rendermode="InteractiveServer"/>
 <ReconnectModal/>
+<script>
+    let currentThemeMode = 'system'; //
+
+    function applyTheme() {
+        const isSystemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const htmlEl = document.documentElement;
+
+        let isDark = false;
+        if (currentThemeMode === 'dark') {
+            isDark = true;
+        } else if (currentThemeMode === 'light') {
+            isDark = false;
+        } else { // 'system'
+            isDark = isSystemDark;
+        }
+
+        if (isDark) {
+            htmlEl.classList.add('dark');
+        } else {
+            htmlEl.classList.remove('dark');
+        }
+
+        updateThemeUI();
+    }
+
+    function setTheme(mode) {
+        currentThemeMode = mode;
+        localStorage.setItem('health_checks_theme', mode);
+        applyTheme();
+    }
+
+    function updateThemeUI() {
+        const modes = ['light', 'system', 'dark'];
+        modes.forEach(m => {
+            const btn = document.getElementById(`theme-btn-${m}`);
+            if (!btn) return;
+            if (m === currentThemeMode) {
+                btn.className = 'theme-toggle-btn px-2.5 py-1 rounded-full flex items-center gap-1.5 bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm font-semibold transition-all focus:outline-none';
+            } else {
+                btn.className = 'theme-toggle-btn px-2.5 py-1 rounded-full flex items-center gap-1.5 hover:text-slate-800 dark:hover:text-slate-200 transition-all focus:outline-none';
+            }
+        });
+    }
+
+    // Listen to system color scheme changes dynamically
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+        if (currentThemeMode === 'system') {
+            applyTheme();
+        }
+    });
+
+    // Initialize saved theme on load
+    (function initTheme() {
+        const savedTheme = localStorage.getItem('health_checks_theme');
+        if (savedTheme && ['light', 'system', 'dark'].includes(savedTheme)) {
+            currentThemeMode = savedTheme;
+        }
+        applyTheme();
+    })();
+
+    // Auto-refresh Countdown Timer
+    let timeLeft = 15;
+    const timerElement = document.getElementById('countdownTimer');
+    const refreshIcon = document.getElementById('refreshIcon');
+
+    setInterval(() => {
+        timeLeft--;
+        if (timeLeft < 0) {
+            timeLeft = 15;
+            triggerRefreshAnimation();
+        }
+        if (timerElement) timerElement.textContent = timeLeft;
+    }, 1000);
+
+    function manualRefresh() {
+        timeLeft = 15;
+        if (timerElement) timerElement.textContent = timeLeft;
+        triggerRefreshAnimation();
+    }
+
+    function triggerRefreshAnimation() {
+        if (refreshIcon) {
+            refreshIcon.classList.add('fa-spin');
+            setTimeout(() => {
+                refreshIcon.classList.remove('fa-spin');
+            }, 700);
+        }
+    }
+
+    // Filter Status Functionality
+    function filterStatus(status) {
+        const rows = document.querySelectorAll('.check-row');
+        const tabs = document.querySelectorAll('.filter-tab');
+
+        tabs.forEach(tab => {
+            tab.classList.remove('bg-white', 'dark:bg-slate-700', 'text-slate-900', 'dark:text-white', 'shadow-sm');
+            tab.classList.add('hover:text-slate-900', 'dark:hover:text-white');
+        });
+
+        const activeTab = document.getElementById(`filter-${status}`);
+        if (activeTab) {
+            activeTab.classList.add('bg-white', 'dark:bg-slate-700', 'text-slate-900', 'dark:text-white', 'shadow-sm');
+            activeTab.classList.remove('hover:text-slate-900', 'dark:hover:text-white');
+        }
+
+        let visibleCount = 0;
+        rows.forEach(row => {
+            if (status === 'all' || row.classList.contains(status)) {
+                row.style.display = 'grid';
+                visibleCount++;
+            } else {
+                row.style.display = 'none';
+            }
+        });
+
+        const totalCountEl = document.getElementById('totalCount');
+        if (totalCountEl) totalCountEl.textContent = visibleCount;
+    }
+</script>
 <script src="@Assets["_framework/blazor.web.js"]"></script>
 </body>
 </html>

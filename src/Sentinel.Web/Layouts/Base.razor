@@ -1,131 +1,17 @@
 ﻿@inherits LayoutComponentBase
 
-<BbDirectionProvider Direction="TextDirection.LeftToRight">
-    <body
-        class="h-full text-slate-800 bg-[#eef0f8] flex flex-col items-center justify-start p-2 sm:p-4 md:p-8 antialiased selection:bg-purple-500 selection:text-white">
+<div
+    class="w-full max-w-5xl bg-white dark:bg-slate-900 rounded-2xl shadow-xl shadow-slate-200/60 dark:shadow-slate-950/80 overflow-hidden border border-slate-200/80 dark:border-slate-800/80 flex flex-col max-h-[92vh] my-auto transition-colors duration-300">
+    <div class="flex-1 flex flex-col overflow-hidden bg-white dark:bg-slate-900">
 
-    <!-- Browser Frame Wrapper -->
-    <div
-        class="w-full max-w-5xl bg-white rounded-2xl shadow-xl shadow-slate-200/60 overflow-hidden border border-slate-200/80 flex flex-col max-h-[92vh] my-auto">
 
-        <!-- MAIN STICKY CONTAINER -->
-        <div class="flex-1 flex flex-col overflow-hidden bg-white">
+        @Body
 
-            <!-- Top Bar / App Header (Sticky Top) -->
-            <header
-                class="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-slate-100 px-6 sm:px-8 py-5 flex items-center justify-between transition-all">
-                <!-- Logo & Title -->
-                <div class="flex items-center gap-3">
-                    <div
-                        class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white shadow-md shadow-purple-500/20">
-                        <i class="fa-solid fa-heart text-lg"></i>
-                    </div>
-                    <h1 class="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">Health Checks</h1>
-                </div>
-
-                <!-- Refresh Controls & Status Pill -->
-                <div class="flex items-center gap-3">
-                    <!-- Manual Refresh Button -->
-                    <button id="refreshBtn" onclick="manualRefresh()" title="Refresh status now"
-                            class="p-2 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100 transition-colors focus:outline-none">
-                        <i id="refreshIcon" class="fa-solid fa-rotate-right text-sm"></i>
-                    </button>
-
-                    <!-- Auto-refresh Indicator Pill -->
-                    <div
-                        class="flex items-center gap-2 bg-slate-100/90 border border-slate-200/60 rounded-full px-3.5 py-1.5 text-xs font-medium text-slate-600">
-            <span class="relative flex h-2 w-2">
-              <span
-                  class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-              <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-            </span>
-                        <span>Auto-refresh in <span id="countdownTimer"
-                                                    class="font-semibold text-slate-800 font-mono-custom">15</span>s</span>
-                    </div>
-                </div>
-            </header>
-
-            @Body
-
-            <!-- Footer Summary Bar -->
-            <footer
-                class="bg-slate-50 border-t border-slate-200/80 px-6 sm:px-8 py-3 flex items-center justify-between text-xs text-slate-500 font-medium flex-shrink-0">
-                <div>Total checks: <span id="totalCount" class="font-bold text-slate-700">10</span></div>
-                <div class="flex items-center gap-4">
-                    <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-emerald-500"></span> 7 Healthy</span>
-                    <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-amber-500"></span> 2 Degraded</span>
-                    <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-rose-500"></span> 1 Unhealthy</span>
-                </div>
-            </footer>
-
-        </div>
     </div>
+</div>
 
-    @* <!-- Interactive Script --> *@
-    @* <script> *@
-    @*     // Timer Variables *@
-    @*     let timeLeft = 15; *@
-    @*     const timerElement = document.getElementById('countdownTimer'); *@
-    @*     const refreshIcon = document.getElementById('refreshIcon'); *@
-    @* *@
-    @*     // Live countdown loop *@
-    @*     setInterval(() => { *@
-    @*         timeLeft--; *@
-    @*         if (timeLeft < 0) { *@
-    @*             timeLeft = 15; *@
-    @*             triggerRefreshAnimation(); *@
-    @*         } *@
-    @*         timerElement.textContent = timeLeft; *@
-    @*     }, 1000); *@
-    @* *@
-    @*     // Manual Refresh Handler *@
-    @*     function manualRefresh() { *@
-    @*         timeLeft = 15; *@
-    @*         timerElement.textContent = timeLeft; *@
-    @*         triggerRefreshAnimation(); *@
-    @*     } *@
-    @* *@
-    @*     // Refresh rotation effect *@
-    @*     function triggerRefreshAnimation() { *@
-    @*         refreshIcon.classList.add('fa-spin'); *@
-    @*         setTimeout(() => { *@
-    @*             refreshIcon.classList.remove('fa-spin'); *@
-    @*         }, 700); *@
-    @*     } *@
-    @* *@
-    @*     // Status Filter Functionality *@
-    @*     function filterStatus(status) { *@
-    @*         const rows = document.querySelectorAll('.check-row'); *@
-    @*         const tabs = document.querySelectorAll('.filter-tab'); *@
-    @* *@
-    @*         // Update Tab CSS *@
-    @*         tabs.forEach(tab => { *@
-    @*             tab.classList.remove('bg-white', 'text-slate-900', 'shadow-sm'); *@
-    @*             tab.classList.add('hover:text-slate-900'); *@
-    @*         }); *@
-    @* *@
-    @*         const activeTab = document.getElementById(`filter-${status}`); *@
-    @*         if (activeTab) { *@
-    @*             activeTab.classList.add('bg-white', 'text-slate-900', 'shadow-sm'); *@
-    @*             activeTab.classList.remove('hover:text-slate-900'); *@
-    @*         } *@
-    @* *@
-    @*         // Filter Rows *@
-    @*         let visibleCount = 0; *@
-    @*         rows.forEach(row => { *@
-    @*             if (status === 'all' || row.classList.contains(status)) { *@
-    @*                 row.style.display = 'grid'; *@
-    @*                 visibleCount++; *@
-    @*             } else { *@
-    @*                 row.style.display = 'none'; *@
-    @*             } *@
-    @*         }); *@
-    @* *@
-    @*         document.getElementById('totalCount').textContent = visibleCount; *@
-    @*     } *@
-    @* </script> *@
-    </body>
-    <BbPortalHost/>
-    <BbToastProvider/>
-    <BbDialogProvider/>
-</BbDirectionProvider>
+@code{
+
+
+
+}
